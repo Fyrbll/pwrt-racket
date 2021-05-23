@@ -205,9 +205,26 @@ This doesn't compile, and it shouldn't.
 
 ### Example: Lists
 
-Though Typed Racket has no concept of a _measure_ on a data type, it does
-provide a `vector-length` function that can be used in the predicate of
-`Refine`, so I think it's best to define a wrapper around TR's vectors.
+Typed Racket has no concept of a _measure_ on a data type but it's still
+possible to reason about the length of a list.
+
+When I first approached this chapter I implemented `List` using TR's `Vector`
+data type because `vector-length` is among the functions that can be used in
+the predicate part of `Refine`. Most of the subsequent examples and exercises
+have been implemented using this inefficient vector implementation. I would like
+to apologize for this and also offer the small consolation that in this specific
+project the real work is done by the typechecker.
+
+Upon reviewing the vector-based implementation I remembered that I could use
+`car` in `Refine`'s predicate. This prompted me to try a more efficient
+implementation where a `List` is an ordinary Typed Racket list paired with its
+length. I re-wrote the `List` "interface" - `Emp`, `:::`, `head`, `tail` -
+using this more practical implementation so that you can take advantage of my
+missteps and do the exercises with it instead of the vector implementation. The
+relevant code is listed under the next section "Specifying the Length of a
+List".
+
+My original, vector-based implementation:
 
 ```racket
 (define-type (List a) (Vectorof a))
@@ -297,12 +314,12 @@ vector-based representation ahead.
     v))
 ```
 
-Here's the reason the second, list-based representation has limited mileage. I
-can't use two `tail-2` operations in a row. I have to use `~tail-2` or `~head-2`
-after the first `tail-2`. Technically, if a user sticks to `:::-2`, `Emp-2`,
-`~head-2` and `~tail-2` for creating and manipulating values of type `(List-2
-a)` then `~head-2` and `~tail-2` are just as safe as `head-2` and `tail-2` as
-`(error "list is empty")` will never be executed.
+One caveat of this list-based implementation is that I can't use two `tail-2`
+operations in a row. I have to use `~tail-2` or `~head-2` after the first
+`tail-2`. Technically, if a user sticks to `:::-2`, `Emp-2`, `~head-2` and
+`~tail-2` for creating and manipulating values of type `(List-2 a)` then
+`~head-2` and `~tail-2` are just as safe as `head-2` and `tail-2`. `(error
+"list is empty")` will never be executed.
 
 ```racket
 (: head-2 (All (a) (-> (Refine (l : (List-2 a)) (: (cdr l) (_::: a))) a)))
