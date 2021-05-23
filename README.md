@@ -20,9 +20,9 @@ that it compiles.
 `pdflatex` binaries), you get a PDF version of **pwrt.md** with Racket syntax
 highlighting. 
 - **pwrt.pdf**, generated from **pwrt.md** by running `make` on my computer so
-that you don't have to.
-- **racket.xml**, a Pandoc-compatible syntax definition file for that lets
-it highlight Racket code.
+that you don't have to run `make` yourself.
+- **racket.xml**, a syntax definition file that lets Pandoc highlight Racket
+code.
 
 I'd love to hear your comments, suggestions for improvement and alternate
 approaches to problems. You can post them in the Issues tab. Thank you!
